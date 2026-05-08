@@ -9,8 +9,8 @@ set "EXT_ID=gcicojedmojipobcplkjipgdmlgpehji"
 set "UPDATE_URL=https://raw.githubusercontent.com/ZHR007/singbada-extension/main/deploy/updates.xml"
 rem ================================
 
-echo Writing Chrome extension policy...
-REG ADD "HKCU\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist" /v 1 /t REG_SZ /d "%EXT_ID%;%UPDATE_URL%" /f >nul 2>&1
+echo Writing Chrome extension policy (machine level)...
+REG ADD "HKLM\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist" /v 1 /t REG_SZ /d "%EXT_ID%;%UPDATE_URL%" /f >nul 2>&1
 
 if %errorlevel%==0 (
     echo.
