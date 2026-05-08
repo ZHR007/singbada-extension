@@ -1,0 +1,133 @@
+/* styles.css */
+
+.singbada-helper-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  margin-left: 10px;
+  font-size: 12px;
+  color: #fff;
+  background-color: #1890ff; /* Standard Ant Design / Enterprise Blue */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  line-height: 1.5;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.045);
+}
+
+.singbada-helper-btn:hover {
+  background-color: #40a9ff;
+}
+
+.singbada-helper-btn:active {
+  background-color: #096dd9;
+}
+
+.singbada-helper-btn.loading {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Manual fill button */
+.singbada-manual-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #fff;
+  background-color: #52c41a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 8px;
+}
+
+.singbada-manual-btn:hover {
+  background-color: #73d13d;
+}
+
+.singbada-manual-btn:active {
+  background-color: #389e0d;
+}
+
+/* Result Panel (Toast/Card style) */
+.singbada-result-panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 10000;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  animation: slideIn 0.3s ease-out;
+  border-left: 4px solid #1890ff;
+}
+
+.singbada-result-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: #333;
+}
+
+.singbada-result-close {
+  cursor: pointer;
+  color: #999;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.singbada-result-close:hover {
+  color: #666;
+}
+
+.singbada-result-content {
+  padding: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.singbada-info-row {
+  margin-bottom: 8px;
+  display: flex;
+}
+
+.singbada-label {
+  color: #888;
+  width: 70px;
+  flex-shrink: 0;
+}
+
+.singbada-value {
+  color: #333;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.singbada-value.highlight {
+  color: #1890ff;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.singbada-error {
+  color: #ff4d4f;
+  border-left-color: #ff4d4f;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

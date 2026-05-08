@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 200px;
+      padding: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .header {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+    .setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .number-input {
+      width: 60px;
+      height: 26px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 0 6px;
+      font-size: 13px;
+      color: #333;
+      outline: none;
+    }
+    .number-input:focus {
+      border-color: #1890ff;
+    }
+    .label {
+      font-size: 13px;
+      color: #555;
+    }
+    /* Switch styles */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+    }
+    .switch input { 
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 20px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #1890ff;
+    }
+    input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+    .status {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">插件设置</div>
+    <div class="setting-item">
+      <span class="label">自动查询信息</span>
+      <label class="switch">
+        <input type="checkbox" id="autoQueryToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="setting-item">
+      <span class="label">自动填充加工方</span>
+      <label class="switch">
+        <input type="checkbox" id="autoFillToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="setting-item">
+      <span class="label">默认生产时长(天)</span>
+      <input id="produceTimeDays" class="number-input" type="number" min="0" step="1">
+    </div>
+    <div class="status" id="statusText">当前模式：手动查询</div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

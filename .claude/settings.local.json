@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:gitea.singbada.cn)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(dir \"D:\\\\Claude\\\\singbada-extension.*\")",
+      "Bash(dir \"D:\\\\Claude\\\\*.crx\")",
+      "Bash(dir \"D:\\\\Claude\\\\*.pem\")",
+      "PowerShell(& \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\" --pack-extension=\"D:\\\\Claude\\\\singbada-extension\" 2>&1)",
+      "PowerShell(Get-ChildItem \"D:\\\\Claude\\\\singbada-extension.crx\", \"D:\\\\Claude\\\\singbada-extension.pem\" | Select-Object Name, @{N='Size\\(KB\\)';E={[math]::Round\\($_.Length/1KB,1\\)}}, LastWriteTime)"
+    ]
+  }
+}

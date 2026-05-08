@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Singbada Extension Test Runner</title>
+    <style>
+        body { font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif; padding: 20px; background-color: #f0f2f5; }
+        .container { background: #fff; padding: 20px; border-radius: 4px; box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .el-input__inner { -webkit-appearance: none; background-color: #fff; background-image: none; border-radius: 4px; border: 1px solid #dcdfe6; box-sizing: border-box; color: #606266; display: inline-block; font-size: inherit; height: 40px; line-height: 40px; outline: none; padding: 0 15px; transition: border-color .2s cubic-bezier(.645,.045,.355,1); width: 100%; }
+        .el-input__inner:focus { border-color: #409eff; outline: 0; }
+        .el-form-item { margin-bottom: 22px; }
+        .el-form-item__label { text-align: right; vertical-align: middle; float: left; font-size: 14px; color: #606266; line-height: 40px; padding: 0 12px 0 0; box-sizing: border-box; width: 100px; }
+        .el-input { position: relative; font-size: 14px; display: inline-block; width: 220px; }
+        
+        .mock-row { border: 1px solid #ebeef5; padding: 15px; margin-bottom: 15px; border-radius: 4px; transition: .3s; }
+        .mock-row:hover { box-shadow: 0 2px 12px 0 rgba(0,0,0,.1); }
+        .mock-row h4 { margin-top: 0; color: #303133; }
+        
+        .singbada-helper-btn { display: inline-block; line-height: 1; white-space: nowrap; cursor: pointer; background: #fff; border: 1px solid #dcdfe6; color: #606266; -webkit-appearance: none; text-align: center; box-sizing: border-box; outline: none; margin: 0; transition: .1s; font-weight: 500; padding: 12px 20px; font-size: 14px; border-radius: 4px; color: #fff; background-color: #409eff; border-color: #409eff; margin-left: 10px; }
+        .singbada-helper-btn:hover { background: #66b1ff; border-color: #66b1ff; color: #fff; }
+        
+        /* Toast styles */
+        .singbada-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10001; padding: 10px 14px; border-radius: 6px; background: #333; color: #fff; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 80vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>测试控制台</h2>
+        <div id="controls">
+            <button onclick="window.location.reload()" class="singbada-helper-btn" style="background:#909399; border-color:#909399;">重置页面</button>
+            <button onclick="testAutoFill('车缝工厂(应选中)')" class="singbada-helper-btn">测试自动填充(成功)</button>
+            <button onclick="testAutoFill('不存在的工厂')" class="singbada-helper-btn" style="background:#f56c6c; border-color:#f56c6c;">测试自动填充(失败)</button>
+        </div>
+        <div id="log" style="background: #f4f4f5; padding: 10px; margin-top: 15px; border-radius: 4px; color: #606266; font-family: monospace; max-height: 200px; overflow-y: auto;">
+            <div>Ready.</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h3>订单信息区域</h3>
+        <div style="padding: 10px; background: #ecf5ff; border-radius: 4px;">
+            <label>订单编号：</label>
+            <span id="order-id">TEST-2023-001</span>
+            <!-- Button will be injected here -->
+        </div>
+    </div>
+
+    <div class="container">
+        <h3>表单模拟区域</h3>
+        
+        <!-- Case 1: Interference Item (Processing Item: Cutting) -->
+        <div class="mock-row" data-case="interference">
+            <h4>干扰项 (裁剪) - 不应被填充</h4>
+            <div style="display: flex; flex-wrap: wrap;">
+                <div class="el-form-item">
+                    <label class="el-form-item__label">加工方</label>
+                    <div class="el-input">
+                        <input type="text" class="el-input__inner" placeholder="请选择" id="input-cutting" readonly>
+                    </div>
+                </div>
+                <div class="el-form-item">
+                    <label class="el-form-item__label">加工项目</label>
+                    <div class="el-input">
+                        <input type="text" class="el-input__inner" value="裁剪" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Case 2: Target Item (Processing Item: Sewing + Reasonable Price) -->
+        <div class="mock-row" data-case="target" style="border-left: 5px solid #67c23a;">
+            <h4>目标项 (车缝 + 合理价) - 应被填充</h4>
+            <div class="line-container" style="display:flex; justify-content: space-between;">
+                <div style="flex:1;">
+                    <div class="el-form-item">
+                        <label for="tableData.1.sewing_factory_id_location" class="el-form-item__label">加工方</label>
+                        <div class="el-input">
+                            <input type="text" class="el-input__inner" placeholder="请选择" id="input-sewing" readonly>
+                        </div>
+                    </div>
+                    <div class="el-form-item">
+                        <label for="tableData.1.out_produce_time" class="el-form-item__label">生产时长</label>
+                        <div class="el-input">
+                            <input type="text" class="el-input__inner" placeholder="天数" id="tableData.1.out_produce_time">
+                        </div>
+                    </div>
+                    <div class="el-form-item">
+                        <label class="el-form-item__label">加工项目</label>
+                        <div class="el-input">
+                            <input type="text" class="el-input__inner" value="车缝" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:200px; padding: 10px; background: #fdf6ec;">
+                    <div class="item flex">
+                        <span style="font-weight:bold; color:#e6a23c;">合理价：</span>
+                        <div class="row"><span class="is-width">4.43元</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Case 3: Ambiguous Item (Similar structure but no Reasonable Price) -->
+        <div class="mock-row" data-case="ambiguous">
+            <h4>模糊项 (车缝 - 无合理价) - 不应被填充</h4>
+            <div style="display: flex; flex-wrap: wrap;">
+                <div class="el-form-item">
+                    <label class="el-form-item__label">加工方</label>
+                    <div class="el-input">
+                        <input type="text" class="el-input__inner" placeholder="请选择" id="input-ambiguous" readonly>
+                    </div>
+                </div>
+                <div class="el-form-item">
+                    <label class="el-form-item__label">加工项目</label>
+                    <div class="el-input">
+                        <input type="text" class="el-input__inner" value="车缝" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Mock Chrome API
+        window.chrome = {
+            runtime: {
+                onMessage: { addListener: () => {} },
+                sendMessage: (msg, cb) => {
+                    log('Chrome Msg Sent: ' + msg.type);
+                    if (msg.type === 'FETCH_FACTORY_INFO') {
+                        setTimeout(() => {
+                            cb({
+                                success: true,
+                                data: {
+                                    producer: '车缝工厂(应选中)'
+                                }
+                            });
+                        }, 500);
+                    }
+                },
+                lastError: null
+            },
+            storage: {
+                local: {
+                    get: (keys, cb) => cb({ autoQuery: false, autoFillProducer: true, defaultProduceTimeDays: 3 }),
+                    set: () => {}
+                },
+                onChanged: { addListener: () => {} }
+            }
+        };
+
+        // Logger
+        function log(msg) {
+            const el = document.getElementById('log');
+            const div = document.createElement('div');
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            el.insertBefore(div, el.firstChild);
+            console.log(msg);
+        }
+
+        // Mock Element UI Select
+        const factories = ['车缝工厂(应选中)', '其他工厂A', '其他工厂B'];
+        let activeAnchorInput = null;
+        
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('el-input__inner') && e.target.readOnly) {
+                if (e.target.value === '车缝' || e.target.value === '裁剪') return; // Ignore non-select inputs
+                
+                showDropdown(e.target);
+            }
+        });
+
+        function showDropdown(inputEl) {
+            activeAnchorInput = inputEl;
+            // Remove existing
+            document.querySelectorAll('.el-select-dropdown').forEach(e => e.remove());
+
+            const dropdown = document.createElement('div');
+            dropdown.className = 'el-select-dropdown';
+            dropdown.style.cssText = `
+                position: absolute;
+                top: ${inputEl.getBoundingClientRect().bottom + window.scrollY + 5}px;
+                left: ${inputEl.getBoundingClientRect().left + window.scrollX}px;
+                width: ${inputEl.offsetWidth}px;
+                background: #fff;
+                border: 1px solid #e4e7ed;
+                border-radius: 4px;
+                box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+                z-index: 9999;
+            `;
+
+            // Filter input inside dropdown
+            const filterContainer = document.createElement('div');
+            filterContainer.style.padding = '10px';
+            const filterInput = document.createElement('input');
+            filterInput.className = 'el-input__inner';
+            filterInput.placeholder = '输入关键字搜索';
+            filterInput.style.height = '30px';
+            filterInput.style.lineHeight = '30px';
+            
+            filterInput.addEventListener('input', (e) => {
+                log('Dropdown filter input: ' + e.target.value);
+                // Simulate "Paste" effect
+                if (e.inputType === 'insertFromPaste' || e.target.value.length > 1) {
+                    log('Paste detected or bulk input: ' + e.target.value);
+                }
+                renderOptions(listContainer, e.target.value);
+            });
+            // Simulate blur logic
+            filterInput.addEventListener('blur', () => {
+                log('Dropdown filter input blurred');
+            });
+
+            filterContainer.appendChild(filterInput);
+            dropdown.appendChild(filterContainer);
+
+            const listContainer = document.createElement('ul');
+            listContainer.style.cssText = 'list-style: none; padding: 6px 0; margin: 0; max-height: 200px; overflow: auto;';
+            dropdown.appendChild(listContainer);
+
+            renderOptions(listContainer, '');
+
+            document.body.appendChild(dropdown);
+            
+            // Focus filter
+            setTimeout(() => filterInput.focus(), 50);
+
+            // Click outside to close (simplified)
+            const closeHandler = (e) => {
+                if (!dropdown.contains(e.target) && e.target !== inputEl) {
+                    dropdown.remove();
+                    document.removeEventListener('click', closeHandler);
+                }
+            };
+            setTimeout(() => document.addEventListener('click', closeHandler), 0);
+        }
+
+        function renderOptions(container, filter) {
+            container.innerHTML = '';
+            const filtered = factories.filter(f => f.includes(filter));
+            
+            if (filtered.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'el-select-dropdown__empty';
+                empty.textContent = '无匹配数据';
+                empty.style.padding = '10px 0';
+                empty.style.margin = '0';
+                empty.style.textAlign = 'center';
+                empty.style.color = '#999';
+                empty.style.fontSize = '14px';
+                container.appendChild(empty);
+                return;
+            }
+
+            filtered.forEach(f => {
+                const li = document.createElement('li');
+                li.className = 'el-select-dropdown__item';
+                li.textContent = f;
+                li.style.cssText = 'font-size: 14px; padding: 0 20px; position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #606266; height: 34px; line-height: 34px; box-sizing: border-box; cursor: pointer;';
+                
+                li.addEventListener('mouseenter', () => li.style.backgroundColor = '#f5f7fa');
+                li.addEventListener('mouseleave', () => li.style.backgroundColor = '#fff');
+                
+                li.addEventListener('click', () => {
+                    log('Option selected: ' + f);
+                    if (activeAnchorInput) {
+                        activeAnchorInput.value = f;
+                        activeAnchorInput.dispatchEvent(new Event('input', { bubbles: true }));
+                        activeAnchorInput.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                    document.querySelectorAll('.el-select-dropdown').forEach(e => e.remove());
+                });
+                
+                container.appendChild(li);
+            });
+        }
+
+        // Helper to trigger logic
+        function testAutoFill(name) {
+            log('Starting AutoFill Test for: ' + name);
+            if (typeof autoFillProducerName === 'function') {
+                autoFillProducerName(name);
+            } else {
+                log('Error: autoFillProducerName not found. Content script not loaded?');
+            }
+        }
+    </script>
+    <script src="content.js"></script>
+</body>
+</html>

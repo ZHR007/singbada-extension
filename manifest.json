@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Singbada Factory Info Helper",
+  "version": "1.0",
+  "description": "Automatically fetch and display factory information for orders on Singbada production scheduling page.",
+  "update_url": "https://raw.githubusercontent.com/ZHR007/singbada-extension/main/deploy/updates.xml",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "host_permissions": [
+    "https://yy.singbada.cn/*",
+    "https://ntmapi.singbada.cn/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://yy.singbada.cn/productionSchedulings*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
