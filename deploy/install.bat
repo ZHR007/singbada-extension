@@ -5,7 +5,7 @@ echo ============================================
 echo.
 
 rem ============ CONFIG ============
-set "EXT_ID=cjpcclnpebkpeafkbblinbockjbbjoee"
+set "EXT_ID=gcicojedmojipobcplkjipgdmlgpehji"
 set "UPDATE_URL=https://raw.githubusercontent.com/ZHR007/singbada-extension/main/deploy/updates.xml"
 rem ================================
 
